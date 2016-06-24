@@ -21,6 +21,7 @@ Looking at just expenses here. January and February of 2016 were actually lower 
 ![center](/figs/church_markdown/unnamed-chunk-3-1.png)
 
 Our total income is lower than normal, which is represented by the dashed line, but has been relatively consistent. 
+
 ![center](/figs/church_markdown/unnamed-chunk-4-1.png)
 
 Net income is arrived at by taking the income and subtracting the expenses. 2016 has had two really bad months so far in terms of net income. But almost all months have a negative net income but it's usually much smaller. 
@@ -42,18 +43,6 @@ Looking at broad net income. Very few months over the last five+ years have had 
 ## Average Month? 
 
 
-{% highlight text %}
-## Error in html_screenshot(x): Please install the webshot package (if not on CRAN, try devtools::install_github("wch/webshot"))
-{% endhighlight %}
-
-This chart is interactive, so you can mouse over each month to see the actual values of total income, total expenses, and net income. 
-
-Which months are bad? Which are good? The start of the year is historically bad because of expenses being higher. Income is very stable for the first nine months of the year then goes up in November. Looking month by month, the only month which has averaged a net positive has been November, but October and December are close. 
-
-Here's a quick data table to show that decline in a different format.  
-
-{% highlight text %}
-## Error in html_screenshot(x): Please install the webshot package (if not on CRAN, try devtools::install_github("wch/webshot"))
-{% endhighlight %}
+The rest of this post can be better view on [Rpubs where the interactivity is much better.](http://rpubs.com/ryanburge/church_finances) 
 
 
