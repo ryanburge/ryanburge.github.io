@@ -1,16 +1,17 @@
-# Site navigation links
-
-- title: About
-  url: /about/
-
-- title: Articles
-  url: /articles/
-
 - title: Blog
   url: /blog/
+  
+- title: CV
+  url: http://ryanburge.net/wp-content/uploads/2015/08/cv_22.pdf
+  
+- title: Academic Site
+  url: http://ryanburge.net
 
-- title: Theme Setup
-  url: /theme-setup/
+- title: Github
+  url: https://github.com/ryanburge
 
-- title: Search
-  url: /search/
+- title: Resume
+  url: http://ryanburge.net/wp-content/uploads/2015/08/Ryan-Burge.pdf
+
+- title: LinkedIn
+  url: https://www.linkedin.com/in/ryan-burge-66563718
