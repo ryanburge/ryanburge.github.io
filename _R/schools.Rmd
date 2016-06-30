@@ -1,0 +1,123 @@
+---
+title: "Which Schools are in Trouble?"
+author: "Ryan Burge"
+date: "June 29, 2016"
+output: html_document
+---
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)
+library(readr)
+library(dplyr) 
+library(extrafontdb)
+library(extrafont)
+library(jsonlite)
+library(purrr)
+library(choroplethr)
+library(RColorBrewer)
+library(gridExtra)
+library(coefplot)
+library(DT)
+```
+
+## Which schools in Illinois are in the most trouble? 
+
+Illinois has a budget crisis. There are currently about 60 hours left in the fiscal year and the state still hasn't passed a budget. One of the biggest pressure points is K-12 funding. If the general assembly doesn't pass K-12 funding soon then many schools across the state will be unable to open. As a way to show constituents that members of the General Assembly [posted a spreadsheet](https://drive.google.com/file/d/0B73kRUw2l9WmUjNDNXZyTEUzNnM/view?pref=2&pli=1) that indicated how many days every school district in the state could operate if they didn't receive funding in the upcoming fiscal year. I wanted to analyze that. 
+
+```{r message=FALSE, warning=FALSE}
+schools <- read.csv("D:/schools.csv", stringsAsFactors = FALSE)
+schools$days <- as.numeric(schools$Days)
+schools$School <- sub(".*? (.+)", "\\1", schools$School)
+```
+
+## Some initial analysis
+
+Let's take a broad look at the data. 
+
+```{r message=FALSE, warning=FALSE}
+dim(schools)
+```
+
+There are 852 districts in the state. 
+
+```{r message=FALSE, warning=FALSE}
+summary(schools$days)
+```
+
+Here's some simple frequencies. There is one big thing to note here: there are 541 NA's. Those NA's are actually districts that can remain open for the entire year. That means about 63% of districts can survive the entire year without state funding. 
+
+```{r message=FALSE, warning=FALSE}
+ggplot(schools, aes(days)) +
+    geom_histogram() + xlab("Number of Days into the School year") + ylab("# of Schools that Would Run out of Money")
+```
+
+We have to remember that this histogram does not include those 541 who can make it the entire year. Most would survive over 200 days, as well. 
+
+## Mapping
+
+I need to do a lot of things with this data to generate a map of the counties that are most in danger. The first thing I'm going to do is eliminate all those districts that could survive the entire year and just deal with 311 that remain. 
+
+```{r message=FALSE, warning=FALSE}
+sub <- subset(schools, days <= 365)
+```
+
+In order for a map to make any sense it can't just be a raw count of number of schools in trouble by county, but it needs to expressed as a percentage of schools that have a limited amount of funds. Here's how I got there. 
+
+```{r message=FALSE, warning=FALSE}
+df1 <- as.data.frame(table(sub$County))
+df2 <- as.data.frame(table(schools$County))
+merge <- merge(df1,df2,by=c("Var1"))
+merge$percent <- merge$Freq.x/merge$Freq.y
+merge = merge[-1,]
+fips <- read.csv("D:/primary_results.csv", stringsAsFactors = FALSE)
+fips <- subset(fips, candidate == "Donald Trump")
+merge$county <- merge$Var1
+ferge <- merge(merge,fips,by=c("county"))
+map <- select(ferge, county, Freq.x, Freq.y, percent, fips)
+```
+
+There's a bunch of syntax there. Basically I created a smaller dataframe that has a column with just those percentages and then I had to add the FIPS code for each county in order to actually map the counties. That's below. 
+
+```{r message=FALSE, warning=FALSE}
+map$region <- map$fips
+map$value <- map$percent
+choro = CountyChoropleth$new(map)
+choro$title = "Schools in Trouble by County"
+choro$set_num_colors(1)
+choro$set_zoom("illinois")
+choro$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
+choro$ggplot_scale = scale_fill_gradientn(name = "Percent", colours = brewer.pal(8, "Reds"))
+choro$render()
+```
+
+First thing. Counties in gray indicated counties that don't have a school district that will run out of money this fiscal year. The other big takeaway is that there are a lot of counties in southern Illinois that are really struggling. In fact, southeastern Illinois is ground zero for potential problems. 
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+poverty <- read.csv("D:/poverty.csv", stringsAsFactors = FALSE)
+##poverty$county<- gsub('County', '', poverty$county)
+##poverty$county<- gsub('(IL)', '', poverty$county)
+##poverty$county <-sub("\\(\\)","", as.character(poverty$county))
+##poverty$County <- poverty$county
+##poverty$County <- sub("\\s+$", "", poverty$County)
+##test <- merge(schools, poverty, by=c("County"))
+poverty$region <- poverty$fips
+poverty$value <- poverty$poverty
+choro1 = CountyChoropleth$new(poverty)
+choro1$title = "Poverty Rate by County"
+choro1$set_num_colors(1)
+choro1$set_zoom("illinois")
+choro1$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
+choro1$ggplot_scale = scale_fill_gradientn(name = "Percent", colours = brewer.pal(8, "Reds"))
+grid.arrange(choro$render(), choro1$render(), ncol = 2)
+```
+
+I wanted to compare the number of schools in trouble with the poverty rate by county. It's somewhat interesting to note that a lot of counties in Illinois have about the same level of poverty. Many are in the 10-15% range. There is some more poverty in southern Illinois but the difference isn't really that stark. 
+
+## DataTable
+
+Below is datatable that is interactive and will allow you to search for any school district and look at the amount of time they have before the money runs out. 
+
+```{r message=FALSE, warning=FALSE}
+schools$Days <- NULL
+datatable(schools, colnames = c('School', 'County', 'Date the Money is Gone', 'Number of Days'))
+```
