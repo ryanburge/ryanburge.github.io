@@ -1,8 +1,13 @@
 ---
-title: "School Funding in Illinois"
-author: "Ryan Burge"
-date: "July 2, 2016"
-output: html_document
+layout: post
+title: "What Schools Are in Trouble?"
+date: 2016-07-03
+output:
+  html_document
+share: true
+categories: blog
+excerpt: "Which schoools in Illinois are in danger of running out of funds?"
+tags: [rstats]
 ---
 
 
