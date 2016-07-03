@@ -1,9 +1,10 @@
 ---
-title: "Which Schools are in Trouble?"
+title: "School Funding in Illinois"
 author: "Ryan Burge"
-date: "June 29, 2016"
+date: "July 2, 2016"
 output: html_document
 ---
+
 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
@@ -25,9 +26,9 @@ library(DT)
 Illinois has a budget crisis. There are currently about 60 hours left in the fiscal year and the state still hasn't passed a budget. One of the biggest pressure points is K-12 funding. If the general assembly doesn't pass K-12 funding soon then many schools across the state will be unable to open. As a way to show constituents that members of the General Assembly [posted a spreadsheet](https://drive.google.com/file/d/0B73kRUw2l9WmUjNDNXZyTEUzNnM/view?pref=2&pli=1) that indicated how many days every school district in the state could operate if they didn't receive funding in the upcoming fiscal year. I wanted to analyze that. 
 
 ```{r message=FALSE, warning=FALSE}
-schools <- read.csv("D:/schools.csv", stringsAsFactors = FALSE)
-schools$days <- as.numeric(schools$Days)
-schools$School <- sub(".*? (.+)", "\\1", schools$School)
+schools <- read.csv("D:/IL_schools/schools.csv", stringsAsFactors = FALSE)
+schools$days <- as.numeric(schools$days)
+schools$name <- sub(".*? (.+)", "\\1", schools$name)
 ```
 
 ## Some initial analysis
@@ -48,24 +49,34 @@ Here's some simple frequencies. There is one big thing to note here: there are 5
 
 ```{r message=FALSE, warning=FALSE}
 ggplot(schools, aes(days)) +
-    geom_histogram() + xlab("Number of Days into the School year") + ylab("# of Schools that Would Run out of Money")
+    geom_histogram() + xlab("Number of Days into the School year") + ylab("# of Schools that Would Run out of Money") + theme(text=element_text(size=16, family="Roboto Condensed"))
 ```
 
 We have to remember that this histogram does not include those 541 who can make it the entire year. Most would survive over 200 days, as well. 
+
+Let's run the same histogram and include the schools who have an entire year of funding in their reserves. 
+
+```{r message=FALSE, warning=FALSE}
+schools$days[is.na(schools$days)] <- 365
+ggplot(schools, aes(days)) +
+    geom_histogram() + xlab("Number of Days into the School year") + ylab("# of Schools that Would Run out of Money") + theme(text=element_text(size=16, family="Roboto Condensed"))
+```
+
+A lot of schools in Illinois are in very good shape. About 2/3 of them have a year of reserves on hand. That's a pretty surprising statistic. 
 
 ## Mapping
 
 I need to do a lot of things with this data to generate a map of the counties that are most in danger. The first thing I'm going to do is eliminate all those districts that could survive the entire year and just deal with 311 that remain. 
 
 ```{r message=FALSE, warning=FALSE}
-sub <- subset(schools, days <= 365)
+sub <- subset(schools, days < 365)
 ```
 
 In order for a map to make any sense it can't just be a raw count of number of schools in trouble by county, but it needs to expressed as a percentage of schools that have a limited amount of funds. Here's how I got there. 
 
 ```{r message=FALSE, warning=FALSE}
-df1 <- as.data.frame(table(sub$County))
-df2 <- as.data.frame(table(schools$County))
+df1 <- as.data.frame(table(sub$county))
+df2 <- as.data.frame(table(schools$county))
 merge <- merge(df1,df2,by=c("Var1"))
 merge$percent <- merge$Freq.x/merge$Freq.y
 merge = merge[-1,]
@@ -113,11 +124,28 @@ grid.arrange(choro$render(), choro1$render(), ncol = 2)
 
 I wanted to compare the number of schools in trouble with the poverty rate by county. It's somewhat interesting to note that a lot of counties in Illinois have about the same level of poverty. Many are in the 10-15% range. There is some more poverty in southern Illinois but the difference isn't really that stark. 
 
+## Breakdown by Members of the General Assembly
+
+It might be helpful for our state representatives to know which of them represent the highest number of schools that are in danger of closing down. Let's do a count and display that in a histogram. 
+
+```{r message=FALSE, warning=FALSE}
+count_rep <- read.csv("D:/IL_schools/count_rep.csv", stringsAsFactors = FALSE)
+
+ggplot(count_rep, aes(x=reorder(rep, n), y = n, fill = party)) + geom_bar(stat="identity") + coord_flip() + ylab("Number of Schools") + xlab("State Representative") + scale_fill_manual(values = alpha(c("blue", "red"), .65)) + theme(legend.position="none") + theme(text=element_text(size=16, family="Roboto Condensed")) + labs(title = "Schools with less than 180 days of reserves")
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+count_senate <- read.csv("D:/IL_schools/count_senate.csv", stringsAsFactors = FALSE)
+
+ggplot(count_senate, aes(x=reorder(senate, n), y = n, fill = party)) + geom_bar(stat="identity") + coord_flip() + ylab("Number of Schools") + xlab("State Senator") + scale_fill_manual(values = alpha(c("blue", "red"), .65)) + theme(legend.position="none") + theme(text=element_text(size=16, family="Roboto Condensed")) + labs(title = "Schools with less than 180 days of reserves")
+
+```
+
 ## DataTable
 
 Below is datatable that is interactive and will allow you to search for any school district and look at the amount of time they have before the money runs out. 
 
 ```{r message=FALSE, warning=FALSE}
 schools$Days <- NULL
-datatable(schools, colnames = c('School', 'County', 'Date the Money is Gone', 'Number of Days'))
+datatable(schools, colnames = c('School', 'County', 'State Rep.', 'State Senator', 'Date the Money is Gone', 'Number of Days'))
 ```
