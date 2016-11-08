@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Regression Worksheet"
-date: 2016-11-07
+date: 2016-11-08
 output:
   html_document
 share: true
