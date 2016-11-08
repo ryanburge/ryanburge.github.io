@@ -11,14 +11,6 @@ tags: [rstats]
 ---
 
 
----
-title: "Regression Worksheet"
-author: "Ryan Burge"
-date: "November 2, 2016"
-output:
-  html_document: default
-  
----
 
 ## Packages and Data Import
 
