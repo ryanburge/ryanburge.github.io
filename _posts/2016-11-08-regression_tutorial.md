@@ -6,7 +6,7 @@ output:
   html_document
 share: true
 categories: blog
-excerpt: "Walking studenst through a basic regression analysis as well as visualizing results with dotwhisker"
+excerpt: "Walking students through a basic regression analysis as well as visualizing results with dotwhisker"
 tags: [rstats]
 ---
 
