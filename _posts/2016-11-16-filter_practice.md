@@ -28,7 +28,7 @@ Just going to load the data
 simon <- read.csv(url("http://goo.gl/exQA14"))
 {% endhighlight %}
 
-###Introduction to Filter
+### Introduction to Filter
 
 I  wanted to show all of you the filter command. It's part of the dplyr package. It allows you to filter on a certain condition. Let's say that I only wanted to look at the part of the sample that is downstate. The variable is called "area" and downstate is value label 3. You can find that in the codebook. Here's the syntax. 
 
@@ -57,7 +57,7 @@ dim(downstate)
 {% endhighlight %}
 Using the "dim" command gives you the dimensions of the data (rows and columns). You can see here that our downstate dataset has 300 rows, while our entire dataset (simon) has 1000 rows.
 
-###Filter on Two Conditions
+### Filter on Two Conditions
 
 Let's say that you wanted to filter on TWO conditions at one time. Let's say downstate union folks. Here's how we do that. 
 
@@ -118,7 +118,7 @@ The only thing we changed here is simple: the first part of the ggplot command. 
 
 Note here that the graphs have a different scale on the y-value because there are 1000 people in the entire sample and just 300 in the downstate one. 
 
-###Filtering and Plotting on the Same Line
+### Filtering and Plotting on the Same Line
 
 Here's some advanced stuff. Let's filter AND plot all in one line of code. Let's look at party affiliation in each of the three areas that the Simon poll assessed.  
 
