@@ -33,31 +33,32 @@ But what if you just found some data online somewhere and you want to load that 
 
 Let's say you find some data to download. I will use Kaggle as a good example. They have some cool datasets.
 
-![](/figs/filter_practice/kaggle1.png)
+
+![center](/figs/loading_data/kaggle1.png)
 
 ## Downloading the data
 
 I like that "City Payroll Data", how do we get it? 
 
-![](/figs/filter_practice/kaggle2.png)
+![center](/figs/loading_data/kaggle2.png)
 
 ## Unzipping the data
 
 I downloaded it and unzipped. Now I have a .csv file called data.csv
 
-![](/figs/filter_practice/kaggle3.png)
+![center](/figs/loading_data/kaggle3.PNG)
 
 ## Importing into R Studio
 
 So, now I need ot get that into R Studio. Lucky for us, R Studio just added a nice import option. 
 
-![](/figs/filter_practice/kaggle4.png)
+![center](/figs/loading_data/kaggle4.PNG)
 
 ## Importing Data Options
 
 You can import data from all sorts of formats including SPSS, Stata, Excel, or CSV. For us, we have a CSV file so let's go to that option. 
 
-![](/figs/filter_practice/kaggle5.png)
+![center](/figs/loading_data/kaggle5.PNG)
 
 You need to do two things. 
 
@@ -71,7 +72,7 @@ I called mine "df."
 
 ## Final Results
 
-![](/figs/filter_practice/kaggle6.png)
+![center](/figs/loading_data/kaggle6.PNG)
 
 To make sure it worked just do: 
 
@@ -124,7 +125,7 @@ write.csv(df, "saved_data.csv")
 
 And it's at the very bottom of the "Files" pane in the bottom right of R Studio. 
 
-![](/figs/filter_practice/kaggle7.png)
+![center](/figs/loading_data/kaggle7.PNG)
 
 ## Where to find data? 
 
