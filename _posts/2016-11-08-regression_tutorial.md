@@ -7,7 +7,7 @@ output:
 share: true
 categories: blog
 excerpt: "Walking students through a basic regression analysis as well as visualizing results with dotwhisker"
-tags: [rstats]
+tags: [tutorial]
 ---
 
 

@@ -7,7 +7,7 @@ output:
 share: true
 categories: blog
 excerpt: "A really gentle introduction to the filter function in R. Also dealing with the pipe operator"
-tags: [rstats]
+tags: [tutorial]
 ---
 
 
