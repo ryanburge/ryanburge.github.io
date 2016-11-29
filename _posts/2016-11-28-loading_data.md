@@ -7,7 +7,7 @@ output:
 share: true
 categories: blog
 excerpt: "A step by step process for loading data into R Studio"
-tags: [rstats], [tutorial]
+tags: [tutorial]
 ---
 
 
