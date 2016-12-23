@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Rural and Evangelical"
-date: 2016-12-02
+date: 2016-12-13
 output:
   html_document
 share: true
@@ -11,8 +11,7 @@ tags: [rstats]
 ---
 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
 library(foreign)
 library(gridExtra)
@@ -20,17 +19,16 @@ library(RColorBrewer)
 library(choroplethr)
 library(choroplethrMaps)
 library(viridis)
-library(dplyr)
 library(DT)
 library(knitr)
-{% endhighlight %}
+library(dplyr)
+```
 
 I got the county level voting datafile from [here](https://github.com/mkearney/presidential_election_county_results_2016)
 
 I got the 2010 religious census data from [here](http://www.thearda.com/Archive/Files/Descriptions/RCMSCY10.asp)
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 vote <- read.csv("D:/2016_election/pres16results.csv", stringsAsFactors = FALSE)
 vote$fips <- gsub("(?<![0-9])0+", "", vote$fips, perl = TRUE)
 census <- read.dta("D:/2016_election/relcensus.dta", convert.factors = FALSE)
@@ -41,30 +39,21 @@ pres <- filter(merge, cand_name == "Donald Trump" | cand_name == "Hillary Clinto
 trump <- filter(merge, cand_name == "Donald Trump")
 clinton <- filter(merge, cand_name == "Hillary Clinton")
 trump$diff <- trump$pct - clinton$pct
-{% endhighlight %}
+```
 
 ## Rural Counties 
 
 There is no set definition of what rural means, so here's what I did: 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 df <- select(trump, cntyname, stabbr, fips, votes, total, pct, POP2010, evanrate, code)
 summary(df$POP2010)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##      82   11310   26080   99010   67080 9819000
-{% endhighlight %}
+```
 
 I am going to use the counties whose 2010 total population was below the mean of 26,080. Let's see how Trump did in those counties. 
 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 rural <- filter(df, POP2010 <=26080)
 rural$region <- rural$fips
 rural$value <- rural$pct
@@ -75,30 +64,19 @@ choro$set_num_colors(1)
 choro$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
 choro$ggplot_scale = scale_fill_gradientn(name = "Trump Share", colours = palette_rev)
 choro$render()
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-4-1.png)
+```
 
 ## Counties with Above Average Evangelicals
 
 Let's do the same with evangelicals. 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 summary(df$evanrate)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##     0.0   107.7   190.5   233.8   334.1  1309.0      18
-{% endhighlight %}
+```
 
 The median here is 190.5 evangelicals per 1000. So any county that's 19.1% evangelical is in this subset. 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 high_evan <- filter(df, evanrate >= 190.5)
 high_evan$region <- high_evan$fips
 high_evan$value <- high_evan$pct
@@ -109,14 +87,11 @@ choro$set_num_colors(1)
 choro$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
 choro$ggplot_scale = scale_fill_gradientn(name = "Trump Share", colours = palette_rev)
 choro$render()
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-6-1.png)
+```
 
 ## Let's Combine Rural and High Evangelical
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 rural_evan <- filter(df, POP2010 <=26080 & evanrate >= 190.5)
 rural_evan$region <- rural_evan$fips
 rural_evan$value <- rural_evan$pct
@@ -127,51 +102,25 @@ choro$set_num_colors(1)
 choro$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
 choro$ggplot_scale = scale_fill_gradientn(name = "Trump Share", colours = palette_rev)
 choro$render()
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-7-1.png)
+```
 
 ## A Searchable Table
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 table <- select(rural_evan, cntyname, stabbr, pct, POP2010, evanrate)
 table$pct <- round(table$pct, 2)
 table$evanrate <- round(table$evanrate, 2)
 datatable(table, colnames =  c("County", "State", "Trump's Percentage", "2010 Population", "Total Evangelicals per 1000"))
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in loadNamespace(name): there is no package called 'webshot'
-{% endhighlight %}
+```
 
 ## So, how many rural, highly evangelical counties voted for Hillary Clinton?
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 dim(rural_evan)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## [1] 852  11
-{% endhighlight %}
-
-
-
-{% highlight r %}
 hrc <- filter(rural_evan, pct <=.5)
 dim(hrc)
-{% endhighlight %}
 
-
-
-{% highlight text %}
-## [1] 63 11
-{% endhighlight %}
+```
 
 There were 852 counties in the total dataset and just 63 had a majority of the votes for Clinton. Trump carried 92.6% of those counties.  
 
@@ -188,8 +137,8 @@ The [CDC provides a classification scheme](http://www.cdc.gov/nchs/data_access/u
 
 Here's how it breaks down in a map. 
 
+```{r message=FALSE, warning=FALSE}
 
-{% highlight r %}
 df$region <- df$fips
 df$value <- df$code
 palette_rev <- rev(brewer.pal(8, "RdBu"))
@@ -199,14 +148,11 @@ choro$set_num_colors(1)
 choro$ggplot_polygon = geom_polygon(aes(fill = value), color = NA)
 choro$ggplot_scale = scale_fill_gradientn(name = "Rural - Urban", colours = brewer.pal(6, "Spectral"))
 choro$render()
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-10-1.png)
+```
 
 ## How are evangelicals distributed through these six regions? 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 a1 <- df %>% group_by(code) %>% summarise(avg_evan = median(evanrate, na.rm = TRUE), trump_vote = median(pct, na.rm = TRUE), total_pop = sum(POP2010, na.rm = TRUE))
 
 a1$code[a1$code==1]<-"Large Central Metro"
@@ -217,54 +163,59 @@ a1$code[a1$code==5]<-"Micropolitan"
 a1$code[a1$code==6]<-"Non-core"
 a1$code <- factor(a1$code, levels=unique(a1$code))
 ggplot(a1, aes(x=code, y=avg_evan, fill= code)) + geom_col() + xlab("Urban Rural Classification Scheme") + ylab("Number of Evangelicals (per Thousand)") + theme(legend.position="none")
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-11-1.png)
+```
 
 There are definitely more evangelicals in rural areas than in more densely populated areas (by percentage). Large central metros are 10.7% evangelical, and non-core areas are 21.7% evangelical. 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 ggplot(a1, aes(x=code, y=total_pop/1000000, fill= code)) + geom_col() + xlab("Urban Rural Classification Scheme") + ylab("Total Population (in Millions)") + theme(legend.position="none")
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-12-1.png)
+```
 
 The issue here is that there A LOT more people that live in the metro areas than in the other areas. 
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 a1$evan_percent <- a1$avg_evan/1000
 a1$total_evan <- a1$total_pop * a1$evan_percent
 a1$percent_total <- a1$total_evan/sum(a1$total_evan)
 ggplot(a1, aes(x=code, y=total_evan/1000000, fill= code)) + geom_col() + theme(axis.text.x = element_text(angle = 90)) + theme(legend.position="none") + xlab("Urban Rural Classification Scheme") + ylab("Total Number of Evangelicals (in millions)")
-{% endhighlight %}
-
-![center](/figs/wapo/unnamed-chunk-13-1.png)
+```
 
 Here's the upshot of the whole thing. While rural areas are twice as evangelical as the largest metropolitan area, just 8.5% of all evangelicals in the United States live in the "non-core" counties. Even if you add "micropolitan" to "non-core" there are still more evangelicals living in big cities. 
 
 ## Another Table
 
-
-{% highlight r %}
+```{r message=FALSE, warning=FALSE}
 table2 <- select(a1, code, trump_vote, total_pop, evan_percent, total_evan, percent_total)
 table2$percent_total <- round(table2$percent_total, 2)
 table2 <- data.frame(table2)
 table2 <- table2 %>% rename("Classification" = code, "Trump Vote" = trump_vote, "Total Population" = total_pop, "Percent Evangelical" = evan_percent, "Total Evangelicals" = total_evan, "Percentage of All Evangelicals in Each Classification" = percent_total)
 kable(table2)
-{% endhighlight %}
+```
 
-
-
-|Classification      | Trump Vote| Total Population| Percent Evangelical| Total Evangelicals| Percentage of All Evangelicals in Each Classification|
-|:-------------------|----------:|----------------:|-------------------:|------------------:|-----------------------------------------------------:|
-|Large Central Metro |  0.3375237|         93505527|           0.1073894|           10041507|                                                  0.21|
-|Large Fringe Metro  |  0.6030650|         76007372|           0.1665800|           12661308|                                                  0.26|
-|Medium Metro        |  0.5946537|         63982250|           0.1833244|           11729510|                                                  0.24|
-|Small Metro         |  0.6296317|         28472269|           0.1689100|            4809251|                                                  0.10|
-|Micropolitan        |  0.6606895|         27109461|           0.1875444|            5084229|                                                  0.10|
-|Non-core            |  0.7216858|         18938530|           0.2174544|            4118268|                                                  0.09|
-
-
-
+```{r message=FALSE, warning=FALSE, echo= FALSE}
+vote <- read.csv("D:/2016_election/pres16results.csv", stringsAsFactors = FALSE)
+vote$fips <- gsub("(?<![0-9])0+", "", vote$fips, perl = TRUE)
+pres12 <- read.csv("D:/2016_election/twelve.csv", stringsAsFactors = FALSE)
+trump <- filter(vote, cand_name == "Donald Trump")
+pres12$fips <- pres12$FIPS
+pres12$FIPS <- NULL
+merge <- merge(trump, pres12, by=c("fips"))
+census <- read.dta("D:/2016_election/relcensus.dta", convert.factors = FALSE)
+census <- select(census, fips, evanrate, POP2010)
+merge <- merge(census, merge, by=c("fips"))
+#merge <- select(merge, fips, evanrate, pct, romneypct)
+merge$romneypct <- as.numeric(merge$romneypct)
+merge <- merge %>% mutate(trumppct = pct*100)
+```
+## How Did Trump's Margins Compare to Romney's in 2012? 
+```{r message=FALSE, warning=FALSE}
+a1<- merge %>% filter(evanrate >250) %>% summarise(mean_trump = mean(trumppct), mean_romney = mean(romneypct))
+a2<- merge %>% filter(evanrate >500) %>% summarise(mean_trump = mean(trumppct), mean_romney = mean(romneypct))
+a3<- merge %>% filter(evanrate >250 & POP2010 <25000) %>% summarise(mean_trump = mean(trumppct), mean_romney = mean(romneypct))
+a4<- merge %>% filter(evanrate >500 & POP2010 <25000) %>% summarise(mean_trump = mean(trumppct), mean_romney = mean(romneypct))
+a5 <- rbind(a1, a2, a3, a4)
+a5$trump_advantage <- a5$mean_trump - a5$mean_romney
+a5$description <- c("25%+ Evangelical", "50%+ Evangelical", "25%+ Evangelical and Population < 25000", "50%+ Evangelical and Population < 25000")
+table3 <- a5 %>% rename("Trump Vote Share" = mean_trump, "Romney Vote Share" = mean_romney, "Trump's Margin over Romney" = trump_advantage, "Description" = description)
+kable(table3)
+```
