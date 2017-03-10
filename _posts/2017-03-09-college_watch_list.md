@@ -67,5 +67,5 @@ map %>% setView(-98.690940, 39.651426, zoom = 4)
 
 ### The Finished Product
 
-<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_ae14ca98c8d244f6bbc2fe49d960c870.html"
+<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_6cc90b9ad7e84cdc8d57c4cfd9cd71c3.html"
 style="border: none; width: 900px; height: 800px">></iframe>
