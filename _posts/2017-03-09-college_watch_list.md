@@ -45,20 +45,36 @@ pop<-paste0("<b>Name</b>: ",ourSpatialPoints$ID, "<br>",
             "<b>Composite Score</b>: ",merge$`Composite Score`)
 {% endhighlight %}
 
-I really liked the look of a darker map, so I wanted to use that as my base. 
-
-
+ 
+I wanted to create a green, yellow, red legend so that people could easily see which schools were in the worse trouble. In order to do that I had to write a simple function to break the scores down into three categories. Then I wanted to use some nice icons. 
 {% highlight r %}
+getColor <- function(merge) {
+  sapply(merge$score, function(score) {
+    if(score >= 2.5) {
+      "green"
+    } else if(score >= 1.5) {
+      "orange"
+    } else {
+      "red"
+    } })
+}
 
-map<-leaflet()%>%
-  addTiles('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>')%>%
-  addCircleMarkers(data=ourSpatialPoints, radius =5, fillColor = "firebrick", fillOpacity=0.8, weight=1, color='black' , popup=pop)
+
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = getColor(merge)
+)
 {% endhighlight %}
 
-In addition I wanted the map to be zoomed to the center of the United States to give the user a nice starting point. 
+I really liked the look of a darker map, so I wanted to use that as my base. In addition I wanted the map to be zoomed to the center of the United States to give the user a nice starting point. 
 
 {% highlight r %}
-map %>% setView(-98.690940, 39.651426, zoom = 4)
+leaflet(merge) %>% addTiles('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>') %>%
+  addAwesomeMarkers(~lon, ~lat, icon=icons, popup =pop)  %>% 
+  addLegend("bottomright", colors= c("Green", "Yellow", "Red"), labels= c("> 2.5", "1.5-2.5", "< 1.5"),  title="Composite Score")%>% 
+  setView(-98.690940, 39.651426, zoom = 4)
 {% endhighlight %}
 
 
@@ -66,5 +82,6 @@ map %>% setView(-98.690940, 39.651426, zoom = 4)
 
 Every college in the database is mapped here. The scores range from -1 to 3. Any school that scores 1.5 or lower is considered to be in financial distress. 
 
-<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_6cc90b9ad7e84cdc8d57c4cfd9cd71c3.html"
+
+<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_8a72894cc5d74d838da699631b853d1a.html"
 style="border: none; width: 900px; height: 800px">></iframe>
