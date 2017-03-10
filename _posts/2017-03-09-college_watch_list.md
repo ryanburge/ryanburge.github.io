@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Colleges In Trouble"
+title: "The Financial Stability of Private Colleges"
 date: 2017-3-9
 output:
   html_document
@@ -11,7 +11,7 @@ tags: [rstats]
 ---
 
 
-The Chronicle of Higher Education [released a list](http://www.chronicle.com/article/177-Private-Colleges-Fail/239436) of 177 schools that were on the financial watchlist. I wanted to try and work with the [leaflet package](https://rstudio.github.io/leaflet/) to create an interactive map. Here's what I came up with. 
+The Chronicle of Higher Education [released a list](http://www.chronicle.com/article/177-Private-Colleges-Fail/239436) of the financial composite scores for each private university in the United States. I wanted to try and work with the [leaflet package](https://rstudio.github.io/leaflet/) to create an interactive map. Here's what I came up with. 
 
 {% highlight r %}
 library(readr)
@@ -63,6 +63,8 @@ map %>% setView(-98.690940, 39.651426, zoom = 4)
 
 
 ### The Finished Product
+
+Every college in the database is mapped here. The scores range from -1 to 3. Any school that scores 1.5 or lower is considered to be in financial distress. 
 
 <iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_6cc90b9ad7e84cdc8d57c4cfd9cd71c3.html"
 style="border: none; width: 900px; height: 800px">></iframe>
