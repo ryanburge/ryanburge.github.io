@@ -1,9 +1,15 @@
 ---
+layout: post
 title: "Colleges In Trouble"
-author: "Ryan Burge"
-date: "March 9, 2017"
-output: html_document
+date: 2017-3-9
+output:
+  html_document
+share: true
+categories: blog
+excerpt: "Making an interactive leaflet map with colleges that are on the financial watchlist"
+tags: [rstats]
 ---
+
 
 The Chronicle of Higher Education [released a list](http://www.chronicle.com/article/177-Private-Colleges-Fail/239436) of 177 schools that were on the financial watchlist. I wanted to try and work with the [leaflet package](https://rstudio.github.io/leaflet/) to create an interactive map. Here's what I came up with. 
 
