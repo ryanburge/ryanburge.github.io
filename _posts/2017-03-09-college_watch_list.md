@@ -83,5 +83,7 @@ leaflet(merge) %>% addTiles('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{
 Every college in the database is mapped here. The scores range from -1 to 3. Any school that scores 1.5 or lower is considered to be in financial distress. 
 
 
-<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_8a72894cc5d74d838da699631b853d1a.html"
+<iframe src="//rstudio-pubs-static.s3.amazonaws.com/257221_20d5cfc305264f3cbcc159f9408dbce5.html"
 style="border: none; width: 900px; height: 800px">></iframe>
+
+
