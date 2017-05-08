@@ -141,11 +141,9 @@ leaflet()%>%
 {% endhighlight %}
 
 
-## Here's the Interactive Map
+## Here's the Interactive Map and Searchable Table
 
-Scroll down for the interactive map and searchable table. 
-
-<iframe src="//rstudio-pubs-static.s3.amazonaws.com/271573_03e1cd908ca34687b4ed5e57fb870c97.html"
+<iframe src="//rstudio-pubs-static.s3.amazonaws.com/271573_499555e5490f44a9834f262f114cd5d7.html"
 style="border: none; width: 900px; height: 800px">></iframe>
 
 
