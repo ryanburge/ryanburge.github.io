@@ -12,6 +12,9 @@ tags: [rstats]
 
 ## Here is the static map, scroll down for the interactive version. 
 
+![alt text](https://raw.githubusercontent.com/ryanburge/Slot_Machine/master/screenshot.png "Screenshot")
+
+
 
 
 
@@ -139,6 +142,8 @@ leaflet()%>%
 
 
 ## Here's the Interactive Map
+
+Scroll down for the interactive map and searchable table. 
 
 <iframe src="//rstudio-pubs-static.s3.amazonaws.com/271573_03e1cd908ca34687b4ed5e57fb870c97.html"
 style="border: none; width: 900px; height: 800px">></iframe>
