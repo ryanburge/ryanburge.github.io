@@ -6,7 +6,7 @@ output:
   html_document
 share: true
 categories: blog
-excerpt: "How do Presidents handle the National Prayer Breakfast? Feauting Text and Sentiment Analysis"
+excerpt: "How do Presidents handle the National Prayer Breakfast? Featuring Text and Sentiment Analysis"
 tags: [rstats]
 ---
 

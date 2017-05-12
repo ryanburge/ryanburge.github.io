@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Mapping Slot Machine Revnues in Illinois in March 2017"
+title: "Mapping Slot Machine Revenues in Illinois in March 2017"
 date: 2017-5-8
 output:
   html_document
